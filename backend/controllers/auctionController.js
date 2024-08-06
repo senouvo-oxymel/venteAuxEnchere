@@ -8,11 +8,12 @@ const createAuctionItem = async (req, res) => {
 	const userId = req.user.id;
 
 	try {
+		const newDate = new Date(new Date(endDate).getTime());
 		const auctionItem = await AuctionItem.create({
 			title,
 			description,
 			startingBid,
-			endDate,
+			endDate: newDate,
 			createdBy: userId,
 		});
 
@@ -47,7 +48,6 @@ const getAuctionItemById = async (req, res) => {
 const getAuctionItemsByUser = async (req, res) => {
 	try {
 		const token = req.headers.authorization.split(" ")[1];
-
 		const { id } = jwt.decode(token, process.env.JWT_SECRET, (err) => {
 			if (err) {
 				console.log(err);
@@ -83,9 +83,10 @@ const updateAuctionItem = async (req, res) => {
 		auctionItem.title = title || auctionItem.title;
 		auctionItem.description = description || auctionItem.description;
 		auctionItem.startingBid = startingBid || auctionItem.startingBid;
-		auctionItem.endDate = endDate || auctionItem.endDate;
-		auctionItem.updatedAt = Date.now();
-
+		auctionItem.endDate = endDate
+			? new Date(new Date(endDate).getTime())
+			: auctionItem.endDate;
+		auctionItem.updatedAt = new Date(new Date().getTime());
 		await auctionItem.save();
 
 		res.json(auctionItem);
@@ -132,28 +133,32 @@ const getAuctionWinner = async (req, res) => {
 				.json({ winner: "", message: "Auction item not found" });
 		}
 
+		if (new Date(auctionItem.endDate) > new Date(Date.now())) {
+			return res
+				.status(400)
+				.json({ winner: "", message: "Auction has not ended yet" });
+		}
+
 		const bids = await Bid.find({ auctionItemId: id });
 		if (bids.length === 0) {
 			return res
-				.status(300)
+				.status(200)
 				.json({ winner: "", message: "No bids found" });
 		}
 
-		let winner = bids[0];
-		for (const bid of bids) {
-			if (bid.bidAmount > winner.bidAmount) {
-				winner = bid;
-			}
-		}
+		let highestBid = bids.reduce(
+			(max, bid) => (bid.bidAmount > max.bidAmount ? bid : max),
+			bids[0]
+		);
 
-		winner = await User.findById(winner.userId);
+		const winner = await User.findById(highestBid.userId);
 		if (!winner) {
 			return res
 				.status(404)
 				.json({ winner: "", message: "Winner not found" });
 		}
 
-		res.status(200).json(winner);
+		res.status(200).json({ winner });
 	} catch (error) {
 		console.error("Error fetching auction winner:", error);
 		res.status(500).json({ message: error.message });
@@ -163,42 +168,39 @@ const getAuctionWinner = async (req, res) => {
 const getAuctionsWonByUser = async (req, res) => {
 	try {
 		const token = req.headers.authorization.split(" ")[1];
-
-		const { id } = jwt.decode(token, process.env.JWT_SECRET, (err) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).json({ message: err.message });
-			}
-		});
+		const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+		const { id } = decodedToken;
 
 		const bidsByUser = await Bid.find({ userId: id });
 		const auctionIds = bidsByUser.map((bid) => bid.auctionItemId);
 
+		const uniqueAuctionIds = [...new Set(auctionIds)];
+
 		let wonAuctions = [];
 
-		for (let i = 0; i < auctionIds.length; i++) {
-			const bids = await Bid.find({ auctionItemId: auctionIds[i] });
-			let winningBid = bids[0];
-			for (const bid of bids) {
-				if (bid.bidAmount > winningBid.bidAmount) {
-					winningBid = bid;
-				}
-			}
-			let winner = await User.findById(winningBid.userId);
-			if (winner._id.toString() === id) {
-				const auctionItem = await AuctionItem.findById(auctionIds[i]);
-				winner = {};
-				winner.auctionId = auctionIds[i];
-				winner.title = auctionItem.title;
-				winner.description = auctionItem.description;
-				winner.winningBid = winningBid.bidAmount;
-				winner.endDate = auctionItem.endDate;
-				wonAuctions.push(winner);
+		for (let i = 0; i < uniqueAuctionIds.length; i++) {
+			const auctionItemId = uniqueAuctionIds[i];
+			const bids = await Bid.find({ auctionItemId });
+			let winningBid = bids.reduce(
+				(max, bid) => (bid.bidAmount > max.bidAmount ? bid : max),
+				bids[0]
+			);
+
+			const auctionItem = await AuctionItem.findById(auctionItemId);
+			const isAuctionEnded =
+				new Date(auctionItem.endDate) <= new Date(Date.now());
+
+			if (isAuctionEnded && winningBid.userId.toString() === id) {
+				wonAuctions.push({
+					auctionId: auctionItemId,
+					title: auctionItem.title,
+					description: auctionItem.description,
+					winningBid: winningBid.bidAmount,
+					endDate: auctionItem.endDate,
+				});
 			}
 		}
-		res.status(200).json({
-			wonAuctions,
-		});
+		res.status(200).json({ wonAuctions });
 	} catch (error) {
 		console.log(error.message);
 		res.status(500).json({ message: error.message });

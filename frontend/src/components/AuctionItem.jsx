@@ -18,7 +18,7 @@ function AuctionItem() {
 		seconds: 0,
 	});
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 	const [loadingBids, setLoadingBids] = useState(true);
 	const navigate = useNavigate();
 
@@ -56,7 +56,8 @@ function AuctionItem() {
 		const fetchWinner = async () => {
 			try {
 				const res = await axios.get(`/api/auctions/winner/${id}`);
-				setWinner(res.data);
+				console.log(res.data.winner);
+				setWinner(res.data.winner);
 			} catch (error) {
 				if (error.response.data.winner !== "") {
 					console.error("Error fetching auction winner:", error);
@@ -79,7 +80,7 @@ function AuctionItem() {
 				);
 				setBids(sortedBids);
 				setTotalPages(
-					Math.ceil(sortedBids.length / ITEMS_PER_PAGE) || 1
+					Math.ceil(sortedBids.length / ITEMS_PER_PAGE) || 0
 				);
 			} catch (error) {
 				console.error("Error fetching bids:", error);
@@ -232,11 +233,11 @@ function AuctionItem() {
 						<button
 							onClick={() => handlePageChange(currentPage - 1)}
 							className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-								currentPage === 1
+								currentPage === 1 || totalPages === 0
 									? "cursor-not-allowed opacity-50"
 									: ""
 							}`}
-							disabled={currentPage === 1}
+							disabled={currentPage === 1 || totalPages === 0}
 						>
 							Previous
 						</button>

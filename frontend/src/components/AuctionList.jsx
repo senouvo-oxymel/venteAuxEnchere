@@ -9,7 +9,7 @@ function AuctionList() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 
 	useEffect(() => {
 		const fetchAuctionItems = async () => {
@@ -53,7 +53,9 @@ function AuctionList() {
 				);
 			});
 			setSearchResults(filteredItems);
-			setTotalPages(Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
+			setTotalPages(
+				Math.ceil(filteredItems.length / ITEMS_PER_PAGE) || 0
+			);
 			setCurrentPage(1);
 		};
 		filterItems();
@@ -117,7 +119,7 @@ function AuctionList() {
 					Previous
 				</button>
 				<span className="text-gray-400">
-					Page {currentPage} of {totalPages}
+					Page {currentPage} of {totalPages == 0 ? 1 : totalPages}
 				</span>
 				<button
 					onClick={() => handlePageChange(currentPage + 1)}

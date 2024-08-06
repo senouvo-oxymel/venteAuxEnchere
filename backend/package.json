@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"cors": "^2.8.5",
-		"nodemon": "^2.0.15",
-		"vercel": "^35.2.3"
+		"moment-timezone": "^0.5.45",
+		"nodemon": "^2.0.15"
 	}
 }

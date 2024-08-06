@@ -23,11 +23,11 @@ const auctionItemSchema = mongoose.Schema({
 	},
 	createdAt: {
 		type: Date,
-		default: Date.now(),
+		default: new Date(new Date().getTime()),
 	},
 	updatedAt: {
 		type: Date,
-		default: Date.now(),
+		default: new Date(new Date().getTime()),
 	},
 });
 
