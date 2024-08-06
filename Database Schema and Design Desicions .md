@@ -45,9 +45,8 @@ The Auction System uses MongoDB, a NoSQL database. Here are the main collections
 
 ## 📊 ER Diagram
 
-```
 ![ER Diagram](https://github.com/the-darklord/Auction-Bidding-System/blob/main/ER_Diagram%20.svg)
-```
+
 
 ## 🧠 Design Decisions
 
