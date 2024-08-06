@@ -6,7 +6,7 @@ export default defineConfig({
 	server: {
 		proxy: {
 			"/api": {
-				target: "https://auction-bidding-system-backend.vercel.app/api",
+				target: process.env.TARGET,
 				changeOrigin: true,
 				secure: true,
 				rewrite: (path) => path.replace(/^\/api/, ""),
