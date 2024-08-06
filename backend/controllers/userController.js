@@ -83,24 +83,6 @@ const loginUser = async (req, res) => {
 
 const getProfile = async (req, res) => {
 	try {
-		const { username } = req.query;
-
-		if (username) {
-			const users = await User.find({
-				username: new RegExp(username, "i"),
-			});
-			if (users.length === 0) {
-				return res.status(404).json({ message: "User not found" });
-			}
-
-			const user = users[0];
-			return res.status(200).json({
-				id: user._id,
-				username: user.username,
-				email: user.email,
-			});
-		}
-
 		const token = req.headers.authorization.split(" ")[1];
 		const decoded = jwt.decode(token, process.env.JWT_SECRET);
 		if (!decoded) {
