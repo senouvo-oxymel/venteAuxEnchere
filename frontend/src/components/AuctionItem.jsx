@@ -56,7 +56,6 @@ function AuctionItem() {
 		const fetchWinner = async () => {
 			try {
 				const res = await axios.get(`/api/auctions/winner/${id}`);
-				console.log(res.data.winner);
 				setWinner(res.data.winner);
 			} catch (error) {
 				if (error.response.data.winner !== "") {
