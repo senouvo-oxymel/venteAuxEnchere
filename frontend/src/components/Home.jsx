@@ -2,9 +2,9 @@ import PropTypes from "prop-types";
 
 const Home = () => {
 	const Logo = () => (
-		<div className="flex items-center text-4xl font-bold text-gray-800">
+		<div className="flex items-center text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500">
 			<svg
-				className="w-12 h-12 mr-2"
+				className="w-16 h-16 mr-4"
 				viewBox="0 0 24 24"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
@@ -17,8 +17,11 @@ const Home = () => {
 						x2="100%"
 						y2="100%"
 					>
-						<stop offset="0%" stopColor="#ff6f61" />
-						<stop offset="100%" stopColor="#61d6ff" />
+						<stop offset="0%" stopColor="#ff8a00" />
+						<stop offset="25%" stopColor="#e52e71" />
+						<stop offset="50%" stopColor="#9b51e0" />
+						<stop offset="75%" stopColor="#4facfe" />
+						<stop offset="100%" stopColor="#00f2fe" />
 					</linearGradient>
 				</defs>
 				<path
@@ -135,7 +138,7 @@ const SettingsIcon = () => (
 			strokeLinecap="round"
 			strokeLinejoin="round"
 			strokeWidth={2}
-			d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+			d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.993.606 2.277-.165 2.572-1.065z"
 		/>
 		<path
 			strokeLinecap="round"
