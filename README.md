@@ -118,6 +118,7 @@ project/
         PORT=5000
         MONGODB_URI=your_mongo_uri
         JWT_SECRET=your_jwt_secret
+        ORIGIN=http://localhost:5173 or url of frontend
         ```
 
 #### Frontend
@@ -129,9 +130,16 @@ project/
     ```
 
 2. Install dependencies:
+
     ```bash
     npm install
     ```
+
+3. Set up environment variables:
+    - Create a `.env` file in the `frontend` directory with the following content:
+        ```plaintext
+        TARGET=http://localhost:5000 or url of backend
+        ```
 
 ## 🏃‍♂️ Running the Project
 
