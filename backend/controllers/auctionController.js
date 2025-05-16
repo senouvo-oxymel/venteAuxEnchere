@@ -1,17 +1,43 @@
+require('dotenv').config();
 const AuctionItem = require("../models/AuctionItem");
 const Bid = require("../models/Bid");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({ 
+	cloud_name: process.env.Cloudinary_CLOUD_NAME, 
+	api_key: process.env.Cloudinary_API_KEY,
+	api_secret: process.env.Cloudinary_API_SECRET,
+
+});
 
 const createAuctionItem = async (req, res) => {
+	
+	console.log("REQ.USER:", req.user);
+console.log("REQ.BODY:", req.body);
+console.log("REQ.FILE:", req.file);
 	const { title, description, startingBid, endDate } = req.body;
 	const userId = req.user.id;
 
+
+	
+ 
 	try {
+		
+		
+		if (!req.file) {
+			return res.status(400).json({ message: "Image is required" });
+		}
+
+	
+		const result = await cloudinary.uploader.upload(req.file.path);
+		const imageUrl = result.secure_url;
 		const newDate = new Date(new Date(endDate).getTime());
 		const auctionItem = await AuctionItem.create({
 			title,
 			description,
+			imageurl:imageUrl,
 			startingBid,
 			endDate: newDate,
 			createdBy: userId,
