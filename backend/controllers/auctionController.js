@@ -15,8 +15,8 @@ cloudinary.config({
 const createAuctionItem = async (req, res) => {
 	
 	console.log("REQ.USER:", req.user);
-console.log("REQ.BODY:", req.body);
-console.log("REQ.FILE:", req.file);
+	console.log("REQ.BODY:", req.body);
+	console.log("REQ.FILE:", req.file);
 	const { title, description, startingBid, endDate } = req.body;
 	const userId = req.user.id;
 
@@ -65,6 +65,7 @@ const getAuctionItemById = async (req, res) => {
 		if (!auctionItem) {
 			return res.status(404).json({ message: "Auction item not found" });
 		}
+		console.log("Auction item found:", auctionItem);
 		res.status(200).json(auctionItem);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
