@@ -62,6 +62,7 @@ const getBidHistory = async (req, res) => {
 			"userId",
 			"username"
 		);
+		console.log(bids);
 		res.status(200).json(bids);
 	} catch (error) {
 		res.status(500).json({ message: error.message });

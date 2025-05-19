@@ -14,23 +14,15 @@ cloudinary.config({
 
 const createAuctionItem = async (req, res) => {
 	
-	console.log("REQ.USER:", req.user);
-	console.log("REQ.BODY:", req.body);
-	console.log("REQ.FILE:", req.file);
+
 	const { title, description, startingBid, endDate } = req.body;
 	const userId = req.user.id;
-
-
-	
  
 	try {
-		
-		
 		if (!req.file) {
 			return res.status(400).json({ message: "Image is required" });
 		}
 
-	
 		const result = await cloudinary.uploader.upload(req.file.path);
 		const imageUrl = result.secure_url;
 		const newDate = new Date(new Date(endDate).getTime());

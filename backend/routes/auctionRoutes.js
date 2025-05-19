@@ -24,7 +24,7 @@ router.post("/won", authMiddleware, getAuctionsWonByUser);
 
 router
 	.route("/:id")
-	.get(authMiddleware, getAuctionItemById)
+	.get(getAuctionItemById)
 	.put(authMiddleware, updateAuctionItem)
 	.delete(authMiddleware, deleteAuctionItem);
 

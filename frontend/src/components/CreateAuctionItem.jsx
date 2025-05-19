@@ -6,40 +6,50 @@ const CreateAuctionItem = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startingBid, setStartingBid] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Fonction pour obtenir la date actuelle plus 5 minutes au format 'YYYY-MM-DDTHH:MM'
-  const getCurrentDatePlusMinutes = (minutesToAdd) => {
+  // Fonction pour obtenir la date actuelle + 5 minutes au format requis
+  const getDefaultEndDate = () => {
     const now = new Date();
-    now.setMinutes(now.getMinutes() + minutesToAdd);
+    now.setMinutes(now.getMinutes() + 5);
     const offset = now.getTimezoneOffset();
-    now.setMinutes(now.getMinutes() - offset);
-    return now.toISOString().slice(0, 16);
-  };
+    const localDate = new Date(now.getTime() - offset * 60000);
+	console.log(localDate.toISOString().slice(0, 16));
+    return localDate.toISOString().slice(0, 16);
 
+  };
   // Définir la valeur initiale de endDate lors du montage du composant
-  useEffect(() => {
-    const defaultDate = getCurrentDatePlusMinutes(5);
-    setEndDate(defaultDate);
-  }, []);
+  //useEffect(() => {
+   // setEndDate(getDefaultEndDate());
+  //}, []);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setSelectedImage(file);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("startingBid", startingBid);
+    formData.append("endDate", getDefaultEndDate());
+
     const token = document.cookie
       .split("; ")
       .find((row) => row.startsWith("jwt="))
       ?.split("=")[1];
     if (token) {
       try {
-        await axios.post(
-          "/api/auctions",
-          { title, description, startingBid, endDate },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        await axios.post("/api/auctions", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         navigate("/profile");
       } catch (err) {
         setError("Failed to create auction. Please try again.");
@@ -108,16 +118,16 @@ const CreateAuctionItem = () => {
               </div>
               <div className="mb-4">
                 <label
-                  htmlFor="endDate"
+                  htmlFor="image"
                   className="block text-lg font-medium text-gray-300 mb-1"
                 >
-                  End Date
+                  Add image
                 </label>
                 <input
-                  id="endDate"
-                  type="datetime-local"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300"
                   required
                 />
