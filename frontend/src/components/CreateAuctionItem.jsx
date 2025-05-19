@@ -15,10 +15,8 @@ const CreateAuctionItem = () => {
     const now = new Date();
     now.setMinutes(now.getMinutes() + 5);
     const offset = now.getTimezoneOffset();
-    const localDate = new Date(now.getTime() - offset * 60000);
-	console.log(localDate.toISOString().slice(0, 16));
+    const localDate = new Date(now.getTime() - offset * 60060);
     return localDate.toISOString().slice(0, 16);
-
   };
   // Définir la valeur initiale de endDate lors du montage du composant
   //useEffect(() => {
