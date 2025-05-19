@@ -7,11 +7,27 @@ const CreateAuctionItem = () => {
 	const [description, setDescription] = useState("");
 	const [startingBid, setStartingBid] = useState("");
 	const [endDate, setEndDate] = useState("");
+	const [selectedImage, setSelectedImage] = useState(null);
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
 
+	const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setSelectedImage(file);
+  };
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		const formData = new FormData();
+		formData.append("image", selectedImage);
+		formData.append('title', title);
+    formData.append('description', description);
+    formData.append('startingBid', startingBid);
+    formData.append('endDate', endDate);
+
 		const token = document.cookie
 			.split("; ")
 			.find((row) => row.startsWith("jwt="))
@@ -20,7 +36,7 @@ const CreateAuctionItem = () => {
 			try {
 				await axios.post(
 					"/api/auctions",
-					{ title, description, startingBid, endDate },
+					formData,
 					{
 						headers: { Authorization: `Bearer ${token}` },
 					}
@@ -107,6 +123,22 @@ const CreateAuctionItem = () => {
 									type="datetime-local"
 									value={endDate}
 									onChange={(e) => setEndDate(e.target.value)}
+									className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300"
+									required
+								/>
+							</div>
+							<div className="mb-4">
+								<label
+									htmlFor="image"
+									className="block text-lg font-medium text-gray-300 mb-1"
+								>
+									Add image
+								</label>
+								<input
+									id="image"
+									type="file"
+									accept="image/*"
+									onChange={handleImageChange}
 									className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300"
 									required
 								/>
