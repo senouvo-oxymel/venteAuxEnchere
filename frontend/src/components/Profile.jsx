@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ITEMS_PER_PAGE = 3;
 
@@ -15,6 +16,7 @@ function Profile() {
 	const [totalPagesAuctions, setTotalPagesAuctions] = useState(1);
 	const [totalPagesBids, setTotalPagesBids] = useState(1);
 	const [totalPagesWon, setTotalPagesWon] = useState(1);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -157,18 +159,18 @@ function Profile() {
 				<div className="overflow-hidden bg-gray-800 rounded-lg shadow-xl">
 					<div className="p-6 sm:p-10">
 						<h2 className="mb-6 text-3xl font-extrabold text-white">
-							Profile
+							{t('profile.title')}
 						</h2>
 						<div className="p-6 mb-8 bg-gray-700 rounded-lg">
 							<p className="mb-2 text-lg">
 								<span className="font-semibold text-purple-400">
-									Username:
+									{t('profile.username')}
 								</span>{" "}
 								{user.username}
 							</p>
 							<p className="mb-2 text-lg">
 								<span className="font-semibold text-purple-400">
-									Email:
+									{t('profile.email')}
 								</span>{" "}
 								{user.email}
 							</p>
@@ -176,13 +178,13 @@ function Profile() {
 
 						<div className="flex items-center justify-between mb-8">
 							<h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-teal-500 to-blue-600 animate-pulse">
-								Your Auctions 🏛️
+								{t('profile.your_auctions')}
 							</h2>
 							<Link
 								to="/auction/create"
 								className="inline-block px-6 py-3 text-lg font-semibold text-white transition-all duration-300 transform rounded-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 hover:shadow-lg hover:-translate-y-1"
 							>
-								Create Auction ➕
+								{t('profile.create_auction')}
 							</Link>
 						</div>
 
@@ -202,7 +204,7 @@ function Profile() {
 											</p>
 											<p className="mb-2 text-lg">
 												<span className="font-semibold text-teal-400">
-													Starting Bid:
+													{t('profile.starting_bid')}
 												</span>{" "}
 												<span className="font-bold text-green-400">
 													${auction.startingBid}
@@ -210,19 +212,17 @@ function Profile() {
 											</p>
 											<p className="mb-4">
 												<span className="font-semibold text-teal-400">
-													End Date:
+													{t('profile.end_date')}
 												</span>{" "}
 												<span className="text-blue-300">
-													{new Date(
-														auction.endDate
-													).toLocaleString()}
+													{new Date(auction.endDate).toLocaleString()}
 												</span>
 											</p>
 											<Link
 												to={`/auction/${auction._id}`}
 												className="inline-block px-6 py-3 text-white transition-all duration-300 transform rounded-full bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 hover:shadow-md hover:-translate-y-1"
 											>
-												View Auction 🔍
+												{t('profile.view_auction')}
 											</Link>
 										</div>
 									</div>
@@ -230,60 +230,33 @@ function Profile() {
 							</div>
 						) : (
 							<p className="text-2xl text-gray-400 animate-pulse">
-								No active auctions. Ready to start selling? 💼
+								{t('profile.no_active_auctions')}
 							</p>
 						)}
 
 						<div className="flex items-center justify-between mt-6">
 							<button
-								onClick={() =>
-									handlePageChange(
-										currentPageAuctions - 1,
-										"auctions"
-									)
-								}
-								className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-									currentPageAuctions === 1
-										? "cursor-not-allowed opacity-50"
-										: ""
-								}`}
+								onClick={() => handlePageChange(currentPageAuctions - 1, "auctions")}
+								className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${currentPageAuctions === 1 ? "cursor-not-allowed opacity-50" : ""}`}
 								disabled={currentPageAuctions === 1}
 							>
-								Previous
+								{t('profile.previous')}
 							</button>
 							<span className="text-gray-400">
-								Page {currentPageAuctions} of{" "}
-								{totalPagesAuctions === 0
-									? 1
-									: totalPagesAuctions}
+								{t('profile.page')} {currentPageAuctions} {t('profile.of')} {totalPagesAuctions === 0 ? 1 : totalPagesAuctions}
 							</span>
 							<button
-								onClick={() =>
-									handlePageChange(
-										currentPageAuctions + 1,
-										"auctions"
-									)
-								}
-								className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-									currentPageAuctions ===
-										totalPagesAuctions ||
-									totalPagesAuctions === 0
-										? "cursor-not-allowed opacity-50"
-										: ""
-								}`}
-								disabled={
-									currentPageAuctions ===
-										totalPagesAuctions ||
-									totalPagesAuctions === 0
-								}
+								onClick={() => handlePageChange(currentPageAuctions + 1, "auctions")}
+								className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${(currentPageAuctions === totalPagesAuctions || totalPagesAuctions === 0) ? "cursor-not-allowed opacity-50" : ""}`}
+								disabled={currentPageAuctions === totalPagesAuctions || totalPagesAuctions === 0}
 							>
-								Next
+								{t('profile.next')}
 							</button>
 						</div>
 
 						<div className="mt-12">
 							<h2 className="mb-8 text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 animate-pulse">
-								Your Bids 🎭
+								{t('profile.your_bids')}
 							</h2>
 
 							{paginatedBids.length ? (
@@ -298,14 +271,11 @@ function Profile() {
 													{bid.auctionItem.title}
 												</h3>
 												<p className="mb-4 text-gray-300">
-													{
-														bid.auctionItem
-															.description
-													}
+													{bid.auctionItem.description}
 												</p>
 												<p className="mb-2 text-lg">
 													<span className="font-semibold text-cyan-400">
-														Bid Amount:
+														{t('profile.bid_amount')}
 													</span>{" "}
 													<span className="font-bold text-green-400">
 														${bid.bidAmount}
@@ -313,19 +283,17 @@ function Profile() {
 												</p>
 												<p className="mb-4">
 													<span className="font-semibold text-cyan-400">
-														Bid Date:
+														{t('profile.bid_date')}
 													</span>{" "}
 													<span className="text-blue-300">
-														{new Date(
-															bid.createdAt
-														).toLocaleString()}
+														{new Date(bid.createdAt).toLocaleString()}
 													</span>
 												</p>
 												<Link
 													to={`/auction/${bid.auctionItem._id}`}
 													className="inline-block px-6 py-3 text-white transition-all duration-300 transform rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:shadow-md hover:-translate-y-1"
 												>
-													View Auction 🔍
+													{t('profile.view_auction')}
 												</Link>
 											</div>
 										</div>
@@ -333,58 +301,34 @@ function Profile() {
 								</div>
 							) : (
 								<p className="text-2xl text-gray-400 animate-pulse">
-									No active bids. Ready to join the
-									excitement? 🚀
+									{t('profile.no_active_bids')}
 								</p>
 							)}
 
 							<div className="flex items-center justify-between mt-6">
 								<button
-									onClick={() =>
-										handlePageChange(
-											currentPageBids - 1,
-											"bids"
-										)
-									}
-									className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-										currentPageBids === 1
-											? "cursor-not-allowed opacity-50"
-											: ""
-									}`}
+									onClick={() => handlePageChange(currentPageBids - 1, "bids")}
+									className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${currentPageBids === 1 ? "cursor-not-allowed opacity-50" : ""}`}
 									disabled={currentPageBids === 1}
 								>
-									Previous
+									{t('profile.previous')}
 								</button>
 								<span className="text-gray-400">
-									Page {currentPageBids} of{" "}
-									{totalPagesBids === 0 ? 1 : totalPagesBids}
+									{t('profile.page')} {currentPageBids} {t('profile.of')} {totalPagesBids === 0 ? 1 : totalPagesBids}
 								</span>
 								<button
-									onClick={() =>
-										handlePageChange(
-											currentPageBids + 1,
-											"bids"
-										)
-									}
-									className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-										currentPageBids === totalPagesBids ||
-										totalPagesBids === 0
-											? "cursor-not-allowed opacity-50"
-											: ""
-									}`}
-									disabled={
-										currentPageBids === totalPagesBids ||
-										totalPagesBids === 0
-									}
+									onClick={() => handlePageChange(currentPageBids + 1, "bids")}
+									className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${(currentPageBids === totalPagesBids || totalPagesBids === 0) ? "cursor-not-allowed opacity-50" : ""}`}
+									disabled={currentPageBids === totalPagesBids || totalPagesBids === 0}
 								>
-									Next
+									{t('profile.next')}
 								</button>
 							</div>
 						</div>
 
 						<div className="mt-12">
 							<h2 className="mb-8 text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-pulse">
-								🏆 Your Victorious Auctions 🏆
+								{t('profile.your_victories')}
 							</h2>
 
 							{paginatedWon.length ? (
@@ -403,7 +347,7 @@ function Profile() {
 												</p>
 												<p className="mb-2 text-lg">
 													<span className="font-semibold text-yellow-300">
-														Winning Bid:
+														{t('profile.winning_bid')}
 													</span>{" "}
 													<span className="font-bold text-green-400">
 														${auction.winningBid}
@@ -411,19 +355,17 @@ function Profile() {
 												</p>
 												<p className="mb-4">
 													<span className="font-semibold text-yellow-300">
-														End Date:
+														{t('profile.end_date')}
 													</span>{" "}
 													<span className="text-blue-400">
-														{new Date(
-															auction.endDate
-														).toLocaleString()}
+														{new Date(auction.endDate).toLocaleString()}
 													</span>
 												</p>
 												<Link
 													to={`/auction/${auction.auctionId}`}
 													className="inline-block px-6 py-3 text-lg font-semibold text-white transition-all duration-300 transform rounded-full bg-gradient-to-r from-yellow-400 to-red-500 hover:from-yellow-500 hover:to-red-600 hover:shadow-md hover:-translate-y-1"
 												>
-													View Your Auction Item 🎉
+													{t('profile.view_your_auction')}
 												</Link>
 											</div>
 										</div>
@@ -431,51 +373,27 @@ function Profile() {
 								</div>
 							) : (
 								<p className="text-2xl text-gray-400 animate-bounce">
-									No victories yet, but your winning moment is
-									coming soon! 🌟
+									{t('profile.no_victories')}
 								</p>
 							)}
 
 							<div className="flex items-center justify-between mt-6">
 								<button
-									onClick={() =>
-										handlePageChange(
-											currentPageWon - 1,
-											"won"
-										)
-									}
-									className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-										currentPageWon === 1
-											? "cursor-not-allowed opacity-50"
-											: ""
-									}`}
+									onClick={() => handlePageChange(currentPageWon - 1, "won")}
+									className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${currentPageWon === 1 ? "cursor-not-allowed opacity-50" : ""}`}
 									disabled={currentPageWon === 1}
 								>
-									Previous
+									{t('profile.previous')}
 								</button>
 								<span className="text-gray-400">
-									Page {currentPageWon} of{" "}
-									{totalPagesWon === 0 ? 1 : totalPagesWon}
+									{t('profile.page')} {currentPageWon} {t('profile.of')} {totalPagesWon === 0 ? 1 : totalPagesWon}
 								</span>
 								<button
-									onClick={() =>
-										handlePageChange(
-											currentPageWon + 1,
-											"won"
-										)
-									}
-									className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-										currentPageWon === totalPagesWon ||
-										totalPagesWon === 0
-											? "cursor-not-allowed opacity-50"
-											: ""
-									}`}
-									disabled={
-										currentPageWon === totalPagesWon ||
-										totalPagesWon === 0
-									}
+									onClick={() => handlePageChange(currentPageWon + 1, "won")}
+									className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${(currentPageWon === totalPagesWon || totalPagesWon === 0) ? "cursor-not-allowed opacity-50" : ""}`}
+									disabled={currentPageWon === totalPagesWon || totalPagesWon === 0}
 								>
-									Next
+									{t('profile.next')}
 								</button>
 							</div>
 						</div>

@@ -1,10 +1,16 @@
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const NavBar = () => {
 	const { isLoggedIn } = useAuth();
 	const [isOpen, setIsOpen] = useState(false);
+	const { t, i18n } = useTranslation();
+
+	const changeLanguage = (lng) => {
+		i18n.changeLanguage(lng);
+	};
 
 	return (
 		<nav className="bg-gray-900 bg-opacity-80 backdrop-blur-md p-4 shadow-lg">
@@ -36,13 +42,13 @@ const NavBar = () => {
 						isOpen ? "block" : "hidden"
 					}`}
 				>
-					<ul className="flex flex-col lg:flex-row lg:space-x-6 space-y-4 lg:space-y-0 mt-4 lg:mt-0">
+					<ul className="flex flex-col lg:flex-row lg:space-x-6 space-y-4 lg:space-y-0 mt-4 lg:mt-0 items-center">
 						<li>
 							<Link
 								className="text-white hover:text-gray-300 text-lg"
 								to="/"
 							>
-								Home
+								{t('footer.home')}
 							</Link>
 						</li>
 						<li>
@@ -50,7 +56,7 @@ const NavBar = () => {
 								className="text-white hover:text-gray-300 text-lg"
 								to="/auctions"
 							>
-								Auctions
+								{t('footer.auctions')}
 							</Link>
 						</li>
 						{!isLoggedIn && (
@@ -60,7 +66,7 @@ const NavBar = () => {
 										className="text-white hover:text-gray-300 text-lg"
 										to="/login"
 									>
-										Login
+										{t('footer.login')}
 									</Link>
 								</li>
 								<li>
@@ -68,7 +74,7 @@ const NavBar = () => {
 										className="text-white hover:text-gray-300 text-lg"
 										to="/signup"
 									>
-										Signup
+										{t('footer.signup')}
 									</Link>
 								</li>
 							</>
@@ -93,6 +99,17 @@ const NavBar = () => {
 								</li>
 							</>
 						)}
+						<li>
+							<select
+								value={i18n.language}
+								onChange={e => changeLanguage(e.target.value)}
+								className="bg-gray-800 text-white rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm"
+								aria-label="Select language"
+							>
+								<option value="en">English</option>
+								<option value="fr">Français</option>
+							</select>
+						</li>
 					</ul>
 				</div>
 			</div>

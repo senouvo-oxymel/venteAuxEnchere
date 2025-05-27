@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { FiUser, FiMail, FiLock } from "react-icons/fi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 function Signup() {
 	const [username, setUsername] = useState("");
@@ -14,6 +15,7 @@ function Signup() {
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
 	const { isLoggedIn } = useAuth();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -34,7 +36,7 @@ function Signup() {
 				navigate("/login");
 			}
 		} catch (err) {
-			setError(err.response?.data?.message || "An error occurred");
+			setError(err.response?.data?.message || t("signup.error"));
 			console.error(err);
 		} finally {
 			setLoading(false);
@@ -51,7 +53,7 @@ function Signup() {
 		>
 			<div className="w-full max-w-md p-8 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg">
 				<h2 className="mb-6 text-3xl font-semibold text-white text-center">
-					Signup
+					{t("signup.title")}
 				</h2>
 				<form onSubmit={handleSignup} className="space-y-4">
 					<div className="flex items-center border rounded-md border-gray-600 bg-gray-700">
@@ -59,7 +61,7 @@ function Signup() {
 						<input
 							type="text"
 							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-							placeholder="Username"
+							placeholder={t("signup.username")}
 							value={username}
 							onChange={(e) => setUsername(e.target.value)}
 							required
@@ -70,7 +72,7 @@ function Signup() {
 						<input
 							type="email"
 							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-							placeholder="Email"
+							placeholder={t("signup.email")}
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							required
@@ -81,7 +83,7 @@ function Signup() {
 						<input
 							type="password"
 							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-							placeholder="Password"
+							placeholder={t("signup.password")}
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							required
@@ -92,7 +94,7 @@ function Signup() {
 						<input
 							type="password"
 							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-							placeholder="Confirm Password"
+							placeholder={t("signup.confirm_password")}
 							value={confirmPassword}
 							onChange={(e) => setConfirmPassword(e.target.value)}
 							required
@@ -100,12 +102,9 @@ function Signup() {
 					</div>
 					<div className="flex items-center justify-between mt-4">
 						<p className="text-white">
-							Already have an account?{" "}
-							<Link
-								to="/login"
-								className="text-indigo-300 hover:underline"
-							>
-								Login
+							{t("signup.already_account")} {" "}
+							<Link to="/login" className="text-indigo-300 hover:underline">
+								{t("signup.login_link")}
 							</Link>
 						</p>
 						<button
@@ -116,7 +115,7 @@ function Signup() {
 							{loading ? (
 								<AiOutlineLoading3Quarters className="w-6 h-6 animate-spin mx-auto" />
 							) : (
-								"Signup"
+								t("signup.title")
 							)}
 						</button>
 					</div>

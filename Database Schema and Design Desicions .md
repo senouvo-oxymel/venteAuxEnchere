@@ -121,7 +121,7 @@ The Auction System uses MongoDB, a NoSQL database. Here are the main collections
 
 These design decisions create a flexible, scalable, and secure foundation for the Auction System. The schema can be easily extended to include additional features such as categories, item images, or user ratings in the future.
 
-The ER diagram visually represents these relationships, showing how Users, AuctionItems, and Bids are interconnected. This structure allows for efficient querying and management of auctions, bids, and user information while maintaining the necessary relationships between these entities.
+The ER diagram ly represents these relationships, showing how Users, AuctionItems, and Bids are interconnected. This structure allows for efficient querying and management of auctions, bids, and user information while maintaining the necessary relationships between these entities.
 
 <br>
 

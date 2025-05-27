@@ -8,6 +8,12 @@
 		"backend"
 	],
 	"dependencies": {
-		"project": "file:"
+		"dotenv": "^16.5.0",
+		"i18next": "^25.2.0",
+		"mongodb": "^6.16.0",
+		"mongoose": "^8.15.0",
+		"project": "file:",
+		"react-i18next": "^15.5.2",
+		"react-icons": "^5.5.0"
 	}
 }

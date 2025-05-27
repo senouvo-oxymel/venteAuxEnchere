@@ -1,0 +1,80 @@
+{
+  "welcome": "Bienvenue sur notre système d'enchères en ligne",
+  "intro": "Vivez l'excitation des enchères compétitives grâce à notre plateforme de pointe. Participez à des enchères en direct, placez vos offres et remportez des objets extraordinaires, le tout depuis chez vous.",
+  "view_auctions": "Voir les enchères",
+  "features": {
+    "live_title": "Enchères en direct",
+    "live_desc": "Participez à des enchères en temps réel et placez vos offres instantanément.",
+    "strategize_title": "Stratégisez vos offres",
+    "strategize_desc": "Prévisualisez et préparez-vous aux enchères pour optimiser votre stratégie.",
+    "manage_title": "Gérez vos enchères",
+    "manage_desc": "Créez, modifiez et gérez facilement vos objets en vente grâce à nos outils intuitifs."
+  },
+  "how_title": "Comment ça marche ?",
+  "steps": {
+    "signup_title": "S'inscrire",
+    "signup_desc": "Créez un compte gratuitement en quelques secondes.",
+    "bid_title": "Enchérir",
+    "bid_desc": "Participez aux enchères en direct et placez vos offres.",
+    "win_title": "Gagner",
+    "win_desc": "Remportez des objets uniques et profitez de vos victoires !"
+  },
+  "footer": {
+    "home": "Accueil",
+    "auctions": "Enchères",
+    "login": "Connexion",
+    "signup": "Inscription",
+    "copyright": "Tous droits réservés."
+  },
+  "login": {
+    "title": "Connexion",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "no_account": "Vous n'avez pas de compte ?",
+    "signup_link": "Inscription",
+    "error": "Une erreur est survenue"
+  },
+  "signup": {
+    "title": "Inscription",
+    "username": "Nom d'utilisateur",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmez le mot de passe",
+    "already_account": "Vous avez déjà un compte ?",
+    "login_link": "Connexion",
+    "error": "Une erreur est survenue"
+  },
+  "auctions": {
+    "title": "Objets aux enchères",
+    "search_placeholder": "Rechercher par titre, description, mise de départ, date de fin",
+    "starting_bid": "Mise de départ :",
+    "end_date": "Date de fin :",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page",
+    "of": "sur"
+  },
+  "profile": {
+    "title": "Profil",
+    "username": "Nom d'utilisateur :",
+    "email": "E-mail :",
+    "your_auctions": "Vos enchères 🏛️",
+    "create_auction": "Créer une enchère ➕",
+    "starting_bid": "Mise de départ :",
+    "end_date": "Date de fin :",
+    "view_auction": "Voir l'enchère 🔍",
+    "no_active_auctions": "Aucune enchère active. Prêt à vendre ? 💼",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page",
+    "of": "sur",
+    "your_bids": "Vos offres 🎭",
+    "bid_amount": "Montant de l'offre :",
+    "bid_date": "Date de l'offre :",
+    "no_active_bids": "Aucune offre active. Prêt à tenter votre chance ? 🚀",
+    "your_victories": "🏆 Vos enchères remportées 🏆",
+    "winning_bid": "Offre gagnante :",
+    "view_your_auction": "Voir votre objet remporté 🎉",
+    "no_victories": "Pas encore de victoire, mais votre moment arrive ! 🌟"
+  }
+} 

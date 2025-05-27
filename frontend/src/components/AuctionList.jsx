@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -10,6 +11,7 @@ function AuctionList() {
 	const [searchResults, setSearchResults] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		const fetchAuctionItems = async () => {
@@ -73,11 +75,11 @@ function AuctionList() {
 
 	return (
 		<div className="max-w-4xl mx-auto mt-10 p-6 bg-gray-900 text-white rounded-lg shadow-lg">
-			<h2 className="text-4xl font-bold mb-6">Auction Items</h2>
+			<h2 className="text-4xl font-bold mb-6">{t("auctions.title")}</h2>
 			<div className="mb-6 flex flex-col gap-4">
 				<input
 					type="text"
-					placeholder="Search by Title, Description, Starting Bid, End Date"
+					placeholder={t("auctions.search_placeholder")}
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
 					className="p-3 border border-gray-700 rounded-lg bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -99,10 +101,10 @@ function AuctionList() {
 							<b>{item.description}</b>
 						</p>
 						<p className="text-gray-400 mt-2">
-							<b>Starting Bid:</b> ${item.startingBid}
+							<b>{t("auctions.starting_bid")}</b> ${item.startingBid}
 						</p>
 						<p className="text-gray-400 mt-2">
-							<b>End Date: </b>
+							<b>{t("auctions.end_date")}</b>
 							{new Date(item.endDate).toLocaleDateString()}
 						</p>
 					</li>
@@ -116,10 +118,10 @@ function AuctionList() {
 					}`}
 					disabled={currentPage === 1}
 				>
-					Previous
+					{t("auctions.previous")}
 				</button>
 				<span className="text-gray-400">
-					Page {currentPage} of {totalPages == 0 ? 1 : totalPages}
+					{t("auctions.page")} {currentPage} {t("auctions.of")} {totalPages == 0 ? 1 : totalPages}
 				</span>
 				<button
 					onClick={() => handlePageChange(currentPage + 1)}
@@ -130,7 +132,7 @@ function AuctionList() {
 					}`}
 					disabled={totalPages === 0 || currentPage === totalPages}
 				>
-					Next
+					{t("auctions.next")}
 				</button>
 			</div>
 		</div>

@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { FiMail, FiLock } from "react-icons/fi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
 
 function Login() {
 	const [email, setEmail] = useState("");
@@ -12,6 +13,7 @@ function Login() {
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
 	const { isLoggedIn, login } = useAuth();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -33,7 +35,7 @@ function Login() {
 				navigate("/profile");
 			}
 		} catch (err) {
-			setError(err.response?.data?.message || "An error occurred");
+			setError(err.response?.data?.message || t("login.error"));
 			console.error(err);
 		} finally {
 			setLoading(false);
@@ -50,7 +52,7 @@ function Login() {
 		>
 			<div className="w-full max-w-md p-8 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg">
 				<h2 className="mb-6 text-3xl font-semibold text-white text-center">
-					Login
+					{t("login.title")}
 				</h2>
 				<form onSubmit={handleLogin} className="space-y-4">
 					<div className="flex items-center border rounded-md border-gray-600 bg-gray-700">
@@ -58,7 +60,7 @@ function Login() {
 						<input
 							type="email"
 							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-							placeholder="Email"
+							placeholder={t("login.email")}
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							required
@@ -69,7 +71,7 @@ function Login() {
 						<input
 							type="password"
 							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-							placeholder="Password"
+							placeholder={t("login.password")}
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							required
@@ -77,12 +79,9 @@ function Login() {
 					</div>
 					<div className="flex items-center justify-between mt-4">
 						<p className="text-white">
-							Don{"'"}t have an account?{" "}
-							<Link
-								to="/signup"
-								className="text-indigo-300 hover:underline"
-							>
-								Signup
+							{t("login.no_account")} {" "}
+							<Link to="/signup" className="text-indigo-300 hover:underline">
+								{t("login.signup_link")}
 							</Link>
 						</p>
 						<button
@@ -93,7 +92,7 @@ function Login() {
 							{loading ? (
 								<AiOutlineLoading3Quarters className="w-6 h-6 animate-spin mx-auto" />
 							) : (
-								"Login"
+								t("login.title")
 							)}
 						</button>
 					</div>

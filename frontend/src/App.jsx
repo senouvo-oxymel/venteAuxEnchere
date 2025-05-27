@@ -42,7 +42,7 @@ function App() {
 		<AuthProvider value={{ isLoggedIn, login, logout }}>
 			<Router>
 				<NavBar />
-				<div className="container mx-auto">
+				<div>
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route path="/signup" element={<Signup />} />
