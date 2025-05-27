@@ -1,3 +1,8 @@
+
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+
+
 const express = require("express");
 const {
 	createAuctionItem,
@@ -12,14 +17,14 @@ const {
 const authMiddleware = require("../middleware/authMiddleware");
 const router = express.Router();
 
-router.route("/").get(getAuctionItems).post(authMiddleware, createAuctionItem);
+router.route("/").get(getAuctionItems).post(authMiddleware,upload.single("image"), createAuctionItem);
 router.post("/user", authMiddleware, getAuctionItemsByUser);
 router.get("/winner/:id", authMiddleware, getAuctionWinner);
 router.post("/won", authMiddleware, getAuctionsWonByUser);
 
 router
 	.route("/:id")
-	.get(authMiddleware, getAuctionItemById)
+	.get(getAuctionItemById)
 	.put(authMiddleware, updateAuctionItem)
 	.delete(authMiddleware, deleteAuctionItem);
 

@@ -9,6 +9,12 @@ const auctionItemSchema = mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	
+	imageurl:{
+		type: String,
+		required: true,
+	},
+	
 	startingBid: {
 		type: Number,
 		required: true,
