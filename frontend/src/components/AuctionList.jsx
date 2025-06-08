@@ -88,26 +88,41 @@ function AuctionList() {
 			<ul className="space-y-4">
 				{paginatedItems.map((item) => (
 					<li
-						key={item._id}
-						className="border border-gray-700 rounded-lg p-4 bg-gray-800 shadow-md"
-					>
-						<Link
-							to={`/auction/${item._id}`}
-							className="text-indigo-400 hover:underline text-lg font-semibold"
-						>
-							{item.title}
-						</Link>
-						<p className="text-gray-300 mt-2">
-							<b>{item.description}</b>
-						</p>
-						<p className="text-gray-400 mt-2">
-							<b>{t("auctions.starting_bid")}</b> ${item.startingBid}
-						</p>
-						<p className="text-gray-400 mt-2">
-							<b>{t("auctions.end_date")}</b>
-							{new Date(item.endDate).toLocaleDateString()}
-						</p>
-					</li>
+  key={item._id}
+  className="border border-gray-700 rounded-lg p-4 bg-gray-800 shadow-md"
+>
+  <div className="flex flex-row gap-4">
+    {/* Texte à gauche */}
+    <div className="flex-1">
+      <Link
+        to={`/auction/${item._id}`}
+        className="text-indigo-400 hover:underline text-lg font-semibold"
+      >
+        {item.title}
+      </Link>
+      <p className="text-gray-300 mt-2">
+        <b>{item.description}</b>
+      </p>
+      <p className="text-gray-400 mt-2">
+        <b>{t("auctions.starting_bid")}</b> ${item.startingBid}
+      </p>
+      <p className="text-gray-400 mt-2">
+        <b>{t("auctions.end_date")}</b>{" "}
+        {new Date(item.endDate).toLocaleDateString()}
+      </p>
+    </div>
+
+    {/* Image à droite */}
+    <div className="w-48 h-48">
+      <img
+        src={item.imageurl}
+        alt={item.title}
+        className="w-full h-full object-cover rounded"
+      />
+    </div>
+  </div>
+</li>
+
 				))}
 			</ul>
 			<div className="mt-6 flex justify-between items-center">

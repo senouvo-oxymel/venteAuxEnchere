@@ -136,7 +136,7 @@ function Profile() {
 		startIndexAuctions,
 		endIndexAuctions
 	);
-
+	
 	const startIndexBids = (currentPageBids - 1) * ITEMS_PER_PAGE;
 	const endIndexBids = startIndexBids + ITEMS_PER_PAGE;
 	const paginatedBids = bids.slice(startIndexBids, endIndexBids);
@@ -161,6 +161,7 @@ function Profile() {
 						<h2 className="mb-6 text-3xl font-extrabold text-white">
 							{t('profile.title')}
 						</h2>
+						
 						<div className="p-6 mb-8 bg-gray-700 rounded-lg">
 							<p className="mb-2 text-lg">
 								<span className="font-semibold text-purple-400">
@@ -196,6 +197,11 @@ function Profile() {
 										className="overflow-hidden transition-all duration-300 rounded-lg shadow-md bg-gradient-to-br from-gray-800 to-gray-900 hover:shadow-xl hover:scale-105"
 									>
 										<div className="p-6">
+											<img
+												src={auction.imageurl}
+												alt={auction.title}
+												className="w-full h-48 object-cover mb-4 rounded"
+												/>
 											<h3 className="mb-3 text-2xl font-bold text-white">
 												{auction.title}
 											</h3>
@@ -267,6 +273,11 @@ function Profile() {
 											className="overflow-hidden transition-all duration-300 rounded-lg shadow-md bg-gradient-to-br from-gray-800 to-gray-900 hover:shadow-xl hover:scale-105"
 										>
 											<div className="p-6">
+												<img
+												src={bid.auctionItem.imageurl}
+												alt={bid.auctionItem.title}
+												className="w-full h-48 object-cover mb-4 rounded"
+												/>
 												<h3 className="mb-3 text-2xl font-bold text-white">
 													{bid.auctionItem.title}
 												</h3>
@@ -339,6 +350,11 @@ function Profile() {
 											className="overflow-hidden transition-all duration-300 rounded-lg shadow-lg hover:shadow-2xl hover:scale-105 bg-gradient-to-br from-purple-600 via-pink-500 to-red-500"
 										>
 											<div className="p-6 bg-gray-900 bg-opacity-80">
+												<img
+												src={auction.imageurl}
+												alt={auction.title}
+												className="w-full h-48 object-cover mb-4 rounded"
+												/>
 												<h3 className="mb-3 text-2xl font-bold text-white">
 													{auction.title}
 												</h3>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,6 @@ const CreateAuctionItem = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Fonction pour obtenir la date actuelle + 5 minutes au format requis
   const getDefaultEndDate = () => {
     const now = new Date();
     now.setMinutes(now.getMinutes() + 5);
@@ -18,10 +17,6 @@ const CreateAuctionItem = () => {
     const localDate = new Date(now.getTime() - offset * 60060);
     return localDate.toISOString().slice(0, 16);
   };
-  // Définir la valeur initiale de endDate lors du montage du composant
-  //useEffect(() => {
-   // setEndDate(getDefaultEndDate());
-  //}, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -43,12 +38,15 @@ const CreateAuctionItem = () => {
       .split("; ")
       .find((row) => row.startsWith("jwt="))
       ?.split("=")[1];
+
     if (token) {
       try {
-        await axios.post("/api/auctions", formData, {
+        const response = await axios.post("/api/auctions", formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        navigate("/profile");
+
+        const auctionId = response.data._id; // <-- Assure-toi que le backend retourne bien l'objet créé avec son _id
+        navigate(`/auction/${auctionId}`); // 🔁 Redirection vers la page de l'enchère
       } catch (err) {
         setError("Failed to create auction. Please try again.");
         console.error(err);
@@ -67,10 +65,7 @@ const CreateAuctionItem = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-lg font-medium text-gray-300 mb-1"
-                >
+                <label htmlFor="title" className="block text-lg font-medium text-gray-300 mb-1">
                   Title
                 </label>
                 <input
@@ -83,10 +78,7 @@ const CreateAuctionItem = () => {
                 />
               </div>
               <div className="mb-4">
-                <label
-                  htmlFor="description"
-                  className="block text-lg font-medium text-gray-300 mb-1"
-                >
+                <label htmlFor="description" className="block text-lg font-medium text-gray-300 mb-1">
                   Description
                 </label>
                 <textarea
@@ -98,10 +90,7 @@ const CreateAuctionItem = () => {
                 />
               </div>
               <div className="mb-4">
-                <label
-                  htmlFor="startingBid"
-                  className="block text-lg font-medium text-gray-300 mb-1"
-                >
+                <label htmlFor="startingBid" className="block text-lg font-medium text-gray-300 mb-1">
                   Starting Bid ($)
                 </label>
                 <input
@@ -115,10 +104,7 @@ const CreateAuctionItem = () => {
                 />
               </div>
               <div className="mb-4">
-                <label
-                  htmlFor="image"
-                  className="block text-lg font-medium text-gray-300 mb-1"
-                >
+                <label htmlFor="image" className="block text-lg font-medium text-gray-300 mb-1">
                   Add image
                 </label>
                 <input
