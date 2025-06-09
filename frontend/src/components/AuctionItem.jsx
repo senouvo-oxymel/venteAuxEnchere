@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./AuctionItem.css";
 
 const ITEMS_PER_PAGE = 10;
@@ -19,6 +20,7 @@ function AuctionItem() {
 	const [totalPages, setTotalPages] = useState(0);
 	const [loadingBids, setLoadingBids] = useState(true);
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		const fetchAuctionItem = async () => {
@@ -93,11 +95,30 @@ function AuctionItem() {
 			if (auctionItem) {
 				const endDate = new Date(auctionItem.endDate);
 				const now = new Date();
-				const timeDiff = endDate - now;
+				
+				// Convert both times to UTC milliseconds
+				const endTimeUTC = Date.UTC(
+					endDate.getUTCFullYear(),
+					endDate.getUTCMonth(),
+					endDate.getUTCDate(),
+					endDate.getUTCHours(),
+					endDate.getUTCMinutes(),
+					endDate.getUTCSeconds()
+				);
+				
+				const nowUTC = Date.UTC(
+					now.getUTCFullYear(),
+					now.getUTCMonth(),
+					now.getUTCDate(),
+					now.getUTCHours(),
+					now.getUTCMinutes(),
+					now.getUTCSeconds()
+				);
+				
+				const timeDiff = endTimeUTC - nowUTC;
+				
 				if (timeDiff > 0) {
-					const minutes = Math.floor(
-						(timeDiff % (1000 * 60 * 60)) / (1000 * 60)
-					);
+					const minutes = Math.floor(timeDiff / (1000 * 60));
 					const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 					setCountdown({ minutes, seconds });
 				} else {
@@ -131,7 +152,7 @@ function AuctionItem() {
 	const paginatedBids = bids.slice(startIndex, endIndex);
 
 	if (!auctionItem || !user) {
-		return <p className="mt-10 text-center text-white">Loading...</p>;
+		return <p className="mt-10 text-center text-white">{t('auction.loading_bids')}</p>;
 	}
 
 	const highestBid =
@@ -140,23 +161,20 @@ function AuctionItem() {
 
 	return (
 		<div className="max-w-4xl p-8 mx-auto mt-10 text-white bg-gray-900 rounded-lg shadow-lg">
-			{/* Conteneur flex pour texte + image côte à côte */}
 			<div className="flex flex-col md:flex-row gap-6 items-start">
-				{/* Texte */}
 				<div className="flex-1">
 					<h2 className="mb-4 text-4xl font-bold">{auctionItem.title}</h2>
 					<p className="mb-4 text-lg">{auctionItem.description}</p>
 					<p className="mb-4 text-lg">
-						Starting Bid:{" "}
+						{t('auction.starting_bid')}:{" "}
 						<span className="font-semibold">${auctionItem.startingBid}</span>
 					</p>
 					<p className="mb-4 text-lg">
-						Current Highest Bid:{" "}
+						{t('auction.current_highest')}:{" "}
 						<span className="font-semibold">${highestBid}</span>
 					</p>
 				</div>
 
-				{/* Image */}
 				<div className="w-full md:w-96 flex-shrink-0">
 					<img
 						src={auctionItem.imageurl}
@@ -172,7 +190,7 @@ function AuctionItem() {
 				}`}
 			>
 				<h3 className="mb-2 text-3xl font-bold">
-					{isAuctionEnded ? "Auction Ended" : "Time Remaining"}
+					{isAuctionEnded ? t('auction.auction_ended') : t('auction.time_remaining')}
 				</h3>
 				<div className="countdown-grid">
 					{Object.entries(countdown).map(([unit, value]) => (
@@ -189,23 +207,23 @@ function AuctionItem() {
 				{isAuctionEnded && winner && (
 					<div className="p-4 mt-6 font-bold text-center text-black bg-yellow-500 rounded-lg">
 						<h3 className="text-2xl">
-							Congratulations {winner.username}!
+							{t('auction.congratulations')} {winner.username}!
 						</h3>
 						<p className="text-xl">
-							You are the winner of this auction!
+							{t('auction.winner_message')}
 						</p>
 					</div>
 				)}
 				{isAuctionEnded && !winner && (
 					<div className="p-4 mt-6 font-bold text-center text-black bg-yellow-500 rounded-lg">
-						<h3 className="text-2xl">No Winner !</h3>
+						<h3 className="text-2xl">{t('auction.no_winner')}</h3>
 					</div>
 				)}
 			</div>
 
-			<h3 className="mb-4 text-3xl font-bold">Bids</h3>
+			<h3 className="mb-4 text-3xl font-bold">{t('auction.bids')}</h3>
 			{loadingBids ? (
-				<p className="text-xl text-gray-400">Loading bids...</p>
+				<p className="text-xl text-gray-400">{t('auction.loading_bids')}</p>
 			) : paginatedBids.length ? (
 				<div className="mb-6">
 					{paginatedBids.map((bid) => {
@@ -215,11 +233,11 @@ function AuctionItem() {
 								className="p-4 mb-4 bg-gray-700 rounded-lg"
 							>
 								<p className="text-lg">
-									<span className="font-semibold">Bidder:</span>{" "}
+									<span className="font-semibold">{t('auction.bidder')}:</span>{" "}
 									{bid.userId.username}
 								</p>
 								<p className="text-lg">
-									<span className="font-semibold">Bid Amount:</span>{" "}
+									<span className="font-semibold">{t('auction.bid_amount')}:</span>{" "}
 									${bid.bidAmount}
 								</p>
 							</div>
@@ -235,10 +253,10 @@ function AuctionItem() {
 							}`}
 							disabled={currentPage === 1 || totalPages === 0}
 						>
-							Previous
+							{t('auctions.previous')}
 						</button>
-						<span className="text-gray-400 ext-center ">
-							Page {currentPage} of {totalPages === 0 ? 1 : totalPages}
+						<span className="text-gray-400 text-center">
+							{t('auctions.page')} {currentPage} {t('auctions.of')} {totalPages === 0 ? 1 : totalPages}
 						</span>
 						<button
 							onClick={() => handlePageChange(currentPage + 1)}
@@ -249,12 +267,12 @@ function AuctionItem() {
 							}`}
 							disabled={totalPages === 0 || currentPage === totalPages}
 						>
-							Next
+							{t('auctions.next')}
 						</button>
 					</div>
 				</div>
 			) : (
-				<p className="text-xl text-gray-400">No bids yet.</p>
+				<p className="text-xl text-gray-400">{t('auction.no_bids')}</p>
 			)}
 
 			{auctionItem.createdBy === user.id && (
@@ -263,13 +281,13 @@ function AuctionItem() {
 						to={`/auction/edit/${id}`}
 						className="px-6 py-3 text-white bg-blue-700 rounded-lg hover:bg-blue-800"
 					>
-						Edit
+						{t('auction.edit')}
 					</Link>
 					<button
 						onClick={handleDelete}
 						className="px-6 py-3 text-white bg-red-700 rounded-lg hover:bg-red-800"
 					>
-						Delete
+						{t('auction.delete')}
 					</button>
 				</div>
 			)}
@@ -278,7 +296,7 @@ function AuctionItem() {
 					to={`/auction/bid/${id}`}
 					className="items-center justify-center block px-6 py-3 mt-6 text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800"
 				>
-					Place a Bid
+					{t('auction.place_bid')}
 				</Link>
 			)}
 		</div>

@@ -2,6 +2,8 @@
   "welcome": "Welcome to Our Online Bidding System",
   "intro": "Experience the thrill of competitive bidding with our cutting-edge platform. Join live auctions, place your bids, and win extraordinary items—all from the comfort of your home.",
   "view_auctions": "View Auctions",
+  "create_auction": "Create Auction",
+  "key_features": "Our Key Features",
   "features": {
     "live_title": "Live Auctions",
     "live_desc": "Participate in real-time auctions happening now and place your bids instantly.",
@@ -76,5 +78,59 @@
     "winning_bid": "Winning Bid:",
     "view_your_auction": "View Your Auction Item 🎉",
     "no_victories": "No victories yet, but your winning moment is coming soon! 🌟"
+  },
+  "stats": {
+    "active_auctions": "Active Auctions",
+    "total_users": "Total Users",
+    "successful_bids": "Successful Bids"
+  },
+  "featured_auctions": "Featured Auctions",
+  "view_details": "View Details",
+  "how_it_works": "How it works",
+  "trust_badges": {
+    "title": "Why Choose Us",
+    "active_users": "Active Users",
+    "successful_auctions": "Successful Auctions",
+    "satisfaction_rate": "Satisfaction Rate",
+    "total_bids": "Total Bids"
+  },
+  "testimonials": {
+    "title": "What Our Users Say",
+    "regular_bidder": "Regular Bidder",
+    "auction_creator": "Auction Creator",
+    "collector": "Collector",
+    "testimonial1": "I've won several amazing items through this platform. The bidding experience is smooth and exciting!",
+    "testimonial2": "As a seller, I appreciate the platform's ease of use and the professional support team.",
+    "testimonial3": "The variety of items and the competitive bidding process make this platform stand out."
+  },
+  "navigation": {
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "auction": {
+    "edit_title": "Edit Auction",
+    "title": "Title",
+    "description": "Description",
+    "starting_bid": "Starting Bid",
+    "end_date": "End Date",
+    "update": "Update Auction",
+    "place_bid": "Place a Bid",
+    "bid_amount": "Bid Amount",
+    "current_highest": "Current Highest Bid",
+    "time_remaining": "Time Remaining",
+    "auction_ended": "Auction Ended",
+    "congratulations": "Congratulations",
+    "winner_message": "You are the winner of this auction!",
+    "no_winner": "No Winner!",
+    "bids": "Bids",
+    "bidder": "Bidder",
+    "loading_bids": "Loading bids...",
+    "no_bids": "No bids yet.",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create_title": "Create Auction",
+    "add_image": "Add image",
+    "create": "Create Auction",
+    "error": "Failed to create auction. Please try again."
   }
 } 

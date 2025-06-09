@@ -21,7 +21,7 @@ const auctionItemSchema = mongoose.Schema({
 	},
 	endDate: {
 		type: Date,
-		required: true,
+		required: false,
 	},
 	createdBy: {
 		type: mongoose.Schema.Types.ObjectId,

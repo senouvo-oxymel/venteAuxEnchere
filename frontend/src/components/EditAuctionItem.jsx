@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const EditAuctionItem = () => {
 	const { id } = useParams();
@@ -11,6 +12,7 @@ const EditAuctionItem = () => {
 		endDate: "",
 	});
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		const fetchAuctionItem = async () => {
@@ -36,11 +38,11 @@ const EditAuctionItem = () => {
 
 	return (
 		<div className="max-w-4xl mx-auto mt-10 p-8 bg-gray-900 text-white rounded-lg shadow-lg">
-			<h2 className="text-3xl font-bold mb-6">Edit Auction Item</h2>
+			<h2 className="text-3xl font-bold mb-6">{t('auction.edit_title')}</h2>
 			<form onSubmit={handleSubmit} className="space-y-6">
 				<div>
 					<label htmlFor="title" className="block text-lg mb-2">
-						Title
+						{t('auction.title')}
 					</label>
 					<input
 						type="text"
@@ -53,7 +55,7 @@ const EditAuctionItem = () => {
 				</div>
 				<div>
 					<label htmlFor="description" className="block text-lg mb-2">
-						Description
+						{t('auction.description')}
 					</label>
 					<textarea
 						id="description"
@@ -66,7 +68,7 @@ const EditAuctionItem = () => {
 				</div>
 				<div>
 					<label htmlFor="startingBid" className="block text-lg mb-2">
-						Starting Bid
+						{t('auction.starting_bid')}
 					</label>
 					<input
 						type="number"
@@ -79,7 +81,7 @@ const EditAuctionItem = () => {
 				</div>
 				<div>
 					<label htmlFor="endDate" className="block text-lg mb-2">
-						End Date
+						{t('auction.end_date')}
 					</label>
 					<input
 						type="datetime-local"
@@ -94,7 +96,7 @@ const EditAuctionItem = () => {
 					type="submit"
 					className="w-full py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800"
 				>
-					Update Auction Item
+					{t('auction.update')}
 				</button>
 			</form>
 		</div>

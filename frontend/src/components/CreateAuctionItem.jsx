@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const CreateAuctionItem = () => {
   const [title, setTitle] = useState("");
@@ -9,14 +10,7 @@ const CreateAuctionItem = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  const getDefaultEndDate = () => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 5);
-    const offset = now.getTimezoneOffset();
-    const localDate = new Date(now.getTime() - offset * 60060);
-    return localDate.toISOString().slice(0, 16);
-  };
+  const { t } = useTranslation();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -32,7 +26,6 @@ const CreateAuctionItem = () => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("startingBid", startingBid);
-    formData.append("endDate", getDefaultEndDate());
 
     const token = document.cookie
       .split("; ")
@@ -45,10 +38,10 @@ const CreateAuctionItem = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const auctionId = response.data._id; // <-- Assure-toi que le backend retourne bien l'objet créé avec son _id
-        navigate(`/auction/${auctionId}`); // 🔁 Redirection vers la page de l'enchère
+        const auctionId = response.data._id;
+        navigate(`/auction/${auctionId}`);
       } catch (err) {
-        setError("Failed to create auction. Please try again.");
+        setError(t('auction.error'));
         console.error(err);
       }
     }
@@ -60,13 +53,13 @@ const CreateAuctionItem = () => {
         <div className="bg-gray-800 shadow-xl rounded-lg overflow-hidden">
           <div className="p-6 sm:p-10">
             <h2 className="text-3xl font-extrabold text-white mb-6">
-              Create Auction
+              {t('auction.create_title')}
             </h2>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="title" className="block text-lg font-medium text-gray-300 mb-1">
-                  Title
+                  {t('auction.title')}
                 </label>
                 <input
                   id="title"
@@ -79,7 +72,7 @@ const CreateAuctionItem = () => {
               </div>
               <div className="mb-4">
                 <label htmlFor="description" className="block text-lg font-medium text-gray-300 mb-1">
-                  Description
+                  {t('auction.description')}
                 </label>
                 <textarea
                   id="description"
@@ -91,7 +84,7 @@ const CreateAuctionItem = () => {
               </div>
               <div className="mb-4">
                 <label htmlFor="startingBid" className="block text-lg font-medium text-gray-300 mb-1">
-                  Starting Bid ($)
+                  {t('auction.starting_bid')} ($)
                 </label>
                 <input
                   id="startingBid"
@@ -105,7 +98,7 @@ const CreateAuctionItem = () => {
               </div>
               <div className="mb-4">
                 <label htmlFor="image" className="block text-lg font-medium text-gray-300 mb-1">
-                  Add image
+                  {t('auction.add_image')}
                 </label>
                 <input
                   id="image"
@@ -120,7 +113,7 @@ const CreateAuctionItem = () => {
                 type="submit"
                 className="inline-block bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-purple-700 transition-colors duration-300 text-lg font-semibold"
               >
-                Create Auction
+                {t('auction.create')}
               </button>
             </form>
           </div>

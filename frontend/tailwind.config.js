@@ -34,6 +34,12 @@ export default {
         'container-padding': '1rem',
         'section-spacing': '2rem',
       },
+      dropShadow: {
+        neon: '0 0 6px #32cd32',
+      },
+      fontFamily: {
+        display: ['"Segoe UI"', 'sans-serif'], // ou autre police classe
+      },
       container: {
         center: true,
         padding: {
@@ -44,8 +50,16 @@ export default {
           '2xl': '6rem',
         },
       },
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-out forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(-10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
     },
   },
   plugins: [],
 }
-

@@ -13,9 +13,7 @@ cloudinary.config({
 });
 
 const createAuctionItem = async (req, res) => {
-	
-
-	const { title, description, startingBid, endDate } = req.body;
+	const { title, description, startingBid } = req.body;
 	const userId = req.user.id;
  
 	try {
@@ -25,18 +23,21 @@ const createAuctionItem = async (req, res) => {
 
 		const result = await cloudinary.uploader.upload(req.file.path);
 		const imageUrl = result.secure_url;
-		const newDate = new Date(new Date(endDate).getTime());
+		
+		// Create auction with current timestamp
+		const now = new Date();
 		const auctionItem = await AuctionItem.create({
 			title,
 			description,
-			imageurl:imageUrl,
+			imageurl: imageUrl,
 			startingBid,
-			endDate: newDate,
+			createdAt: now,
 			createdBy: userId,
 		});
 
 		res.status(201).json(auctionItem);
 	} catch (error) {
+		console.error("Error creating auction:", error);
 		res.status(500).json({ message: error.message });
 	}
 };
@@ -57,9 +58,15 @@ const getAuctionItemById = async (req, res) => {
 		if (!auctionItem) {
 			return res.status(404).json({ message: "Auction item not found" });
 		}
+		
+		// Calculate end time when auction is viewed (5 minutes from creation)
+		const endTime = new Date(auctionItem.createdAt.getTime() + (5 * 60 * 1000));
+		auctionItem.endDate = endTime;
+		
 		console.log("Auction item found:", auctionItem);
 		res.status(200).json(auctionItem);
 	} catch (error) {
+		console.error("Error fetching auction:", error);
 		res.status(500).json({ message: error.message });
 	}
 };

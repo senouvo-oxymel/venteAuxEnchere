@@ -42,7 +42,7 @@ function App() {
 		<AuthProvider value={{ isLoggedIn, login, logout }}>
 			<Router>
 				<NavBar />
-				<div>
+				<div className="pt-16 sm:pt-20">
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route path="/signup" element={<Signup />} />
