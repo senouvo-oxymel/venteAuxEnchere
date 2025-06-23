@@ -52,7 +52,7 @@ function AuctionItem() {
 				}
 			}
 		};
-
+        
 		const fetchWinner = async () => {
 			try {
 				const res = await axios.get(`/api/auctions/winner/${id}`);
@@ -68,28 +68,47 @@ function AuctionItem() {
 		fetchWinner();
 	}, [id]);
 
-	useEffect(() => {
-		const fetchBids = async () => {
-			setLoadingBids(true);
-			try {
-				const res = await axios.get(`/api/bids/${id}`);
-				const sortedBids = res.data.sort(
-					(a, b) => b.bidAmount - a.bidAmount
-				);
-				setBids(sortedBids);
-				setTotalPages(
-					Math.ceil(sortedBids.length / ITEMS_PER_PAGE) || 0
-				);
-			} catch (error) {
-				console.error("Error fetching bids:", error);
-			} finally {
-				setLoadingBids(false);
-			}
-		};
+useEffect(() => {
+    const fetchBids = async () => {
+        setLoadingBids(true);
+        try {
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("jwt="))
+                ?.split("=")[1];
+            
+            const config = token ? {
+                headers: { Authorization: `Bearer ${token}` }
+            } : {};
+            
+            const res = await axios.get(`/api/bids/${id}`, config);
+            
+            const sortedBids = res.data.sort(
+                (a, b) => b.bidAmount - a.bidAmount
+            );
+            setBids(sortedBids);
+            setTotalPages(
+                Math.ceil(sortedBids.length / ITEMS_PER_PAGE) || 0
+            );
+        } catch (error) {
+            console.error("Error fetching bids:", error);
+            // Gérer spécifiquement l'erreur 401
+            if (error.response?.status === 401) {
+                // Option 1: Rediriger vers la page de connexion
+                // navigate('/login');
+                
+                // Option 2: Afficher un message à l'utilisateur
+                alert(t('auction.login_required'));
+            }
+        } finally {
+            setLoadingBids(false);
+        }
+    };
 
-		fetchBids();
-	}, [id]);
+    fetchBids();
+}, [id, navigate, t]);
 
+	
 	useEffect(() => {
 		const updateCountdown = () => {
 			if (auctionItem) {
@@ -155,25 +174,28 @@ function AuctionItem() {
 		return <p className="mt-10 text-center text-white">{t('auction.loading_bids')}</p>;
 	}
 
+	
 	const highestBid =
 		bids.length > 0 ? Math.max(...bids.map((bid) => bid.bidAmount)) : 0;
 	const isAuctionEnded = countdown.minutes <= 0 && countdown.seconds <= 0;
 
 	return (
 		<div className="max-w-4xl p-8 mx-auto mt-10 text-white bg-gray-900 rounded-lg shadow-lg">
-			<div className="flex flex-col md:flex-row gap-6 items-start">
-				<div className="flex-1">
-					<h2 className="mb-4 text-4xl font-bold">{auctionItem.title}</h2>
-					<p className="mb-4 text-lg">{auctionItem.description}</p>
-					<p className="mb-4 text-lg">
-						{t('auction.starting_bid')}:{" "}
-						<span className="font-semibold">${auctionItem.startingBid}</span>
-					</p>
-					<p className="mb-4 text-lg">
-						{t('auction.current_highest')}:{" "}
-						<span className="font-semibold">${highestBid}</span>
-					</p>
-				</div>
+				<div className="flex flex-col md:flex-row gap-6 items-start">
+					<div className="flex-1">
+						<h2 className="mb-4 text-4xl font-bold">{auctionItem.title}</h2>
+							<p className="mb-4 text-lg">{auctionItem.description}</p>
+						<p className="mb-4 text-lg">
+							
+							{t('auction.starting_bid')}:{" "}
+					
+							<span className="font-semibold">${auctionItem.startingBid}</span>
+						</p>
+						{/* <p className="mb-4 text-lg">
+							{t('auction.current_highest')}:{" "}
+							<span className="font-semibold">${highestBid}</span>
+						</p> */}
+					</div>
 
 				<div className="w-full md:w-96 flex-shrink-0">
 					<img
@@ -244,7 +266,7 @@ function AuctionItem() {
 						);
 					})}
 					<div className="flex items-center justify-between mt-6">
-						<button
+						{/* <button
 							onClick={() => handlePageChange(currentPage - 1)}
 							className={`bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
 								currentPage === 1 || totalPages === 0
@@ -268,7 +290,7 @@ function AuctionItem() {
 							disabled={totalPages === 0 || currentPage === totalPages}
 						>
 							{t('auctions.next')}
-						</button>
+						</button> */}
 					</div>
 				</div>
 			) : (
@@ -283,12 +305,12 @@ function AuctionItem() {
 					>
 						{t('auction.edit')}
 					</Link>
-					<button
+					{/* <button
 						onClick={handleDelete}
 						className="px-6 py-3 text-white bg-red-700 rounded-lg hover:bg-red-800"
 					>
 						{t('auction.delete')}
-					</button>
+					</button> */}
 				</div>
 			)}
 			{auctionItem.createdBy !== user.id && !isAuctionEnded && (
