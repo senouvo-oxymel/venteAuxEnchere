@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./AuctionItem.css";
+import { io } from "socket.io-client";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -154,14 +155,51 @@ useEffect(() => {
 		return () => clearInterval(interval);
 	}, [auctionItem]);
 
-	const handleDelete = async () => {
-		try {
-			await axios.delete(`/api/auctions/${id}`);
-			navigate("/auctions");
-		} catch (error) {
-			console.error("Error deleting auction item:", error);
-		}
-	};
+	useEffect(() => {
+		const socket = io();
+		const handleAuctionRestarted = (data) => {
+			if (data.auctionId === id) {
+				Promise.all([
+					axios.get(`/api/auctions/${id}`),
+					axios.get(`/api/auctions/winner/${id}`)
+				]).then(([itemRes, winnerRes]) => {
+					setAuctionItem(itemRes.data);
+					setWinner(winnerRes.data.winner);
+					setCountdown({ minutes: 5, seconds: 0 });
+				});
+				console.log(`Auction ${data.auctionId} restarted in real time.`);
+			}
+		};
+		socket.on("auctionRestarted", handleAuctionRestarted);
+		return () => {
+			socket.off("auctionRestarted", handleAuctionRestarted);
+			socket.disconnect();
+		};
+	}, [id]);
+
+	// [REAL-TIME BID UPDATE]
+	useEffect(() => {
+		const socket = io();
+		const handleBidUpdate = (data) => {
+			if (auctionItem && data.auctionItemId === auctionItem._id) {
+				// Refetch bids and update state
+				axios.get(`/api/bids/${auctionItem._id}`)
+					.then((res) => {
+						const sortedBids = res.data.sort((a, b) => b.bidAmount - a.bidAmount);
+						setBids(sortedBids);
+						setTotalPages(Math.ceil(sortedBids.length / ITEMS_PER_PAGE) || 0);
+					});
+				// Optionally, refetch auction item for highest bid info
+				axios.get(`/api/auctions/${auctionItem._id}`)
+					.then((res) => setAuctionItem(res.data));
+			}
+		};
+		socket.on("bidUpdate", handleBidUpdate);
+		return () => {
+			socket.off("bidUpdate", handleBidUpdate);
+			socket.disconnect();
+		};
+	}, [auctionItem]);
 
 	const handlePageChange = (page) => {
 		if (page > 0 && page <= totalPages) {
@@ -188,7 +226,7 @@ useEffect(() => {
 		return <p className="mt-10 text-center text-white">{t('auction.loading_bids')}</p>;
 	}
 
-	const isAuctionEnded = countdown.minutes <= 0 && countdown.seconds <= 0;
+	const isAuctionEnded = auctionItem.ended;
 
 	return (
 		<div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-3xl shadow-2xl border border-blue-100">
@@ -237,7 +275,7 @@ useEffect(() => {
 				{isAuctionEnded && winner && (
 					<div className="flex flex-col items-center mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded-xl shadow">
 						<span className="flex items-center gap-2 text-lg font-bold text-yellow-800">
-							{t('auction.congratulations')} {winner.username}!
+							{t('auction.congratulations')} {winner}!
 						</span>
 						<span className="text-yellow-700">{t('auction.winner_message')}</span>
 					</div>

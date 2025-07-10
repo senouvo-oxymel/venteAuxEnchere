@@ -54,15 +54,22 @@ const getAuctionItems = async (req, res) => {
 
 // Helper: End auction if needed
 async function endAuctionIfNeeded(auctionItem) {
-	if (!auctionItem.ended && new Date(auctionItem.endDate) <= new Date(Date.now())) {
-		const bids = await Bid.find({ auctionItemId: auctionItem._id });
-		if (bids.length > 0) {
-			let highestBid = bids.reduce((max, bid) => (bid.bidAmount > max.bidAmount ? bid : max), bids[0]);
-			auctionItem.winner = highestBid.userId;
-		}
-		auctionItem.ended = true;
-		await auctionItem.save();
-	}
+    if (!auctionItem.ended && new Date(auctionItem.endDate) <= new Date(Date.now())) {
+        const bids = await Bid.find({ auctionItemId: auctionItem._id });
+        if (bids.length > 0) {
+            // [Tie-breaker]: In case of equal bid amounts, the earliest bid wins
+            const sortedBids = bids.sort((a, b) => {
+                if (b.bidAmount !== a.bidAmount) {
+                    return b.bidAmount - a.bidAmount; // Higher bid first
+                }
+                return new Date(a.createdAt) - new Date(b.createdAt); // Earlier bid wins
+            });
+            auctionItem.winner = sortedBids[0].userId;
+            auctionItem.ended = true;
+            await auctionItem.save();
+        }
+        // If there are no bids, DO NOT end the auction here!
+    }
 }
 
 // Patch getAuctionItemById to end auction if needed
@@ -186,21 +193,23 @@ const getAuctionWinner = async (req, res) => {
 				.json({ winner: "", message: "No bids found" });
 		}
 
-		let highestBid = bids.reduce(
-			(max, bid) => (bid.bidAmount > max.bidAmount ? bid : max),
-			bids[0]
-		);
-
-		const winner = await User.findById(highestBid.userId);
+		// [Tie-breaker]: In case of equal bid amounts, the earliest bid wins
+		const sortedBids = bids.sort((a, b) => {
+			if (b.bidAmount !== a.bidAmount) {
+				return b.bidAmount - a.bidAmount; // Higher bid first
+			}
+			return new Date(a.createdAt) - new Date(b.createdAt); // Earlier bid wins
+		});
+		const winner = await User.findById(sortedBids[0].userId);
 		if (!winner) {
 			return res
 				.status(404)
 				.json({ winner: "", message: "Winner not found" });
 		}
 
-		res.status(200).json({ winner });
+		return res.status(200).json({ winner: winner.username, message: "Winner found" });
 	} catch (error) {
-		console.error("Error fetching auction winner:", error);
+		console.error("Error fetching winner:", error);
 		res.status(500).json({ message: error.message });
 	}
 };
